@@ -32,12 +32,12 @@ export class EditorSuggestVerse extends EditorSuggest<SuggestVerse> {
       return null
     }
 
-    const prefixTrigger = currentContent.substring(0, 1)
-    if (!matchTirggerPrefix(prefixTrigger)) {
+    const prefixTrigger = currentContent.substring(0, 2)
+    if (!matchTirggerPrefix(new RegExp(this.plugin.settings.triggerPrefix), prefixTrigger)) {
       return null
     }
 
-    const queryContent = currentContent.substring(1).trim()
+    const queryContent = currentContent.substring(2).trim()
     const match = addressMatch(queryContent)
 
     if (!match) return null

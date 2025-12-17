@@ -15,16 +15,17 @@ export class BibleKitSettingTab extends PluginSettingTab {
     containerEl.empty()
 
     new Setting(containerEl)
-      .setName('Setting #1')
-      .setDesc("It's a secret")
-      .addText((text) =>
-        text
-          .setPlaceholder('Enter your secret')
-          .setValue(this.plugin.settings.mySetting)
-          .onChange(async (value) => {
-            this.plugin.settings.mySetting = value
-            await this.plugin.saveSettings()
-          }),
-      )
+      .setName('Trigger prefix')
+      .setDesc('The prefix to trigger the verse suggestion.')
+      .addDropdown((dropdown) => {
+        dropdown
+          .addOption('@@', '@@')
+          .addOption('--', '--')
+          .setValue(this.plugin.settings.triggerPrefix)
+          .onChange((value) => {
+            this.plugin.settings.triggerPrefix = value
+            this.plugin.saveSettings()
+          })
+      })
   }
 }

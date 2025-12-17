@@ -3,11 +3,11 @@ import { EditorSuggestVerse } from './src/EditorSuggestVerse'
 import { BibleKitSettingTab } from './src/BibleKitSettingTab'
 
 type BibleKitSettings = {
-  mySetting: string
+  triggerPrefix: string
 }
 
 const DEFAULT_SETTINGS: BibleKitSettings = {
-  mySetting: 'default',
+  triggerPrefix: '@@',
 }
 
 export default class BibleKitPlugin extends Plugin {
