@@ -27,5 +27,20 @@ export class BibleKitSettingTab extends PluginSettingTab {
             this.plugin.saveSettings()
           })
       })
+
+    new Setting(containerEl)
+      .setName('Render format')
+      .setDesc('The format to render the verse suggestion.')
+      .addDropdown((dropdown) => {
+        dropdown
+          .addOption('callout', 'Callout')
+          .addOption('blockquote', 'Blockquote')
+          .addOption('normal', 'Normal')
+          .setValue(this.plugin.settings.renderFormat)
+          .onChange((value) => {
+            this.plugin.settings.renderFormat = value
+            this.plugin.saveSettings()
+          })
+      })
   }
 }

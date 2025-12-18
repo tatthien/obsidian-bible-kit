@@ -4,10 +4,12 @@ import { BibleKitSettingTab } from './src/BibleKitSettingTab'
 
 type BibleKitSettings = {
   triggerPrefix: string
+  renderFormat: string
 }
 
 const DEFAULT_SETTINGS: BibleKitSettings = {
   triggerPrefix: '@@',
+  renderFormat: 'callout',
 }
 
 export default class BibleKitPlugin extends Plugin {

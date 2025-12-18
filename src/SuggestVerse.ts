@@ -17,8 +17,15 @@ export class SuggestVerse {
   callout(): string {
     const header = `> [!bible]+ ${capitalize(this.address)}\n`
     const content = `> ${this.htmlVerses()}`
-
     return header + content
+  }
+
+  blockquote(): string {
+    return `> ${this.htmlVerses()}`
+  }
+
+  normal(): string {
+    return this.htmlVerses()
   }
 
   htmlVerses(): string {

@@ -71,9 +71,23 @@ export class EditorSuggestVerse extends EditorSuggest<SuggestVerse> {
   }
 
   selectSuggestion(value: SuggestVerse, evt: MouseEvent | KeyboardEvent): void {
+    const renderFormat = this.plugin.settings.renderFormat
+    let content = ''
+
+    switch (renderFormat) {
+      case 'callout':
+        content = value.callout()
+        break
+      case 'blockquote':
+        content = value.blockquote()
+        break
+      default:
+        content = value.htmlVerses()
+    }
+
     if (this.context) {
       this.context.editor.replaceRange(
-        value.callout(),
+        content,
         this.context.start,
         this.context.end,
       )
