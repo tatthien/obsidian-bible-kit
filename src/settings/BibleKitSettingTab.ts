@@ -32,7 +32,7 @@ export class BibleKitSettingTab extends PluginSettingTab {
     new Setting(containerEl)
       .setName('Render format')
       .setDesc(
-        htmlDescription(`The verses display format. See <a href="https://help.obsidian.md/callouts">Callouts documentation</a> for details.`)
+        htmlDescription(`The verses render format. See <a href="https://help.obsidian.md/callouts">Callouts documentation</a> for details.`)
       )
       .addDropdown((dropdown) => {
         dropdown
