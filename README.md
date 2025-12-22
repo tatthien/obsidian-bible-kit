@@ -1,6 +1,6 @@
 # Obsidian Study for Vietnamese
 
-This plugin aims to make Bible study easier and more productive for Vietnamese. Since I don't find any plugins that support Vietnamese Bible translations.
+This plugin aims to make Bible study easier and more productive for Vietnamese Christians (or anyone who is using Bible in Vietnamese). The motivation behind this plugin is that I couldn't find any plugins supporting Vietnamese Bible translations.
 
 ## Features
 
