@@ -1,6 +1,6 @@
 import { Plugin } from 'obsidian'
 import { EditorSuggestVerse } from './src/EditorSuggestVerse'
-import { BibleKitSettingTab } from './src/BibleKitSettingTab'
+import { BibleKitSettingTab } from './src/settings/BibleKitSettingTab'
 
 type BibleKitSettings = {
   triggerPrefix: string
@@ -8,7 +8,7 @@ type BibleKitSettings = {
 }
 
 const DEFAULT_SETTINGS: BibleKitSettings = {
-  triggerPrefix: '@@',
+  triggerPrefix: '--',
   renderFormat: 'callout',
 }
 

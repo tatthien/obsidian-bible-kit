@@ -1,5 +1,6 @@
-import BibleKitPlugin from '../main'
+import BibleKitPlugin from '../../main'
 import { App, PluginSettingTab, Setting } from 'obsidian'
+import { htmlDescription } from './helpers'
 
 export class BibleKitSettingTab extends PluginSettingTab {
   plugin: BibleKitPlugin
@@ -16,11 +17,11 @@ export class BibleKitSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName('Trigger prefix')
-      .setDesc('The prefix to trigger the verse suggestion.')
+      .setDesc('The prefix to trigger the verses suggestion. For instance, when typing `--sa 1:1` will trigger the suggestion for Sáng-Thế Ký 1:1.')
       .addDropdown((dropdown) => {
         dropdown
-          .addOption('@@', '@@')
           .addOption('--', '--')
+          .addOption('@@', '@@')
           .setValue(this.plugin.settings.triggerPrefix)
           .onChange((value) => {
             this.plugin.settings.triggerPrefix = value
@@ -30,7 +31,9 @@ export class BibleKitSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName('Render format')
-      .setDesc('The format to render the verse suggestion.')
+      .setDesc(
+        htmlDescription(`The verses display format. See <a href="https://help.obsidian.md/callouts">Callouts documentation</a> for details.`)
+      )
       .addDropdown((dropdown) => {
         dropdown
           .addOption('callout', 'Callout')
