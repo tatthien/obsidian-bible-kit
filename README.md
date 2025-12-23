@@ -4,7 +4,7 @@ This plugin aims to make Bible study easier and more productive for Vietnamese C
 
 ## Installation
 
-### Using BRAT (Beta Reviewer's Auto-update Tool)
+### Using BRAT
 
 1. Install [BRAT](https://github.com/TfTHacker/obsidian42-brat) from the Community Plugins in Obsidian
 2. Open the command palette and run **BRAT: Add a beta plugin for testing**
