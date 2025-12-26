@@ -58,9 +58,9 @@ export class EditorSuggestVerse extends EditorSuggest<SuggestVerse> {
     )
     const json = await res.json()
 
-    if (!json.length) return []
+    if (!json.verses.length) return []
 
-    const suggestVerse = new SuggestVerse(json, context.query)
+    const suggestVerse = new SuggestVerse(json.verses, json.reference)
 
     return [suggestVerse]
   }
