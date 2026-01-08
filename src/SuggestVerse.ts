@@ -1,5 +1,4 @@
 import { Verse } from "./types";
-import capitalize from "lodash/capitalize";
 
 export class SuggestVerse {
   private address: string
@@ -15,7 +14,7 @@ export class SuggestVerse {
   }
 
   callout(): string {
-    const header = `> [!bible]+ ${capitalize(this.address)}\n`
+    const header = `> [!bible]+ ${this.address}\n`
     const content = `> ${this.htmlVerses()}`
     return header + content
   }
