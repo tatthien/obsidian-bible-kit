@@ -25,4 +25,8 @@ describe('addressMatch', () => {
       expect(addressMatch(input.address)).toBe(input.expected)
     }
   })
+
+  it('should return empty string if no match', () => {
+    expect(addressMatch('foo bar')).toBe('')
+  })
 })

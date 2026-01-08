@@ -2,6 +2,7 @@ import { matchTirggerPrefix } from './matchTriggerPrefix'
 
 describe('matchTriggerPrefix', () => {
   it('should match trigger prefix', () => {
-    expect(matchTirggerPrefix('@')).toBeTruthy()
+    const regex = new RegExp('@@')
+    expect(matchTirggerPrefix(regex, '@@')).toBeTruthy()
   })
 })
