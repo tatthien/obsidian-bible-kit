@@ -5,3 +5,9 @@ export type Verse = {
   verse: number
   text: string
 }
+
+// Full-text search result (includes rank for relevance sorting)
+export type FTSVerse = Verse & {
+  rank: number
+  reference: string
+}

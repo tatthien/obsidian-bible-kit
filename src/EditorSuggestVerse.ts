@@ -10,8 +10,7 @@ import BibleKitPlugin from '../main'
 import { matchTirggerPrefix } from './helpers/matchTriggerPrefix'
 import { SuggestVerse } from './SuggestVerse'
 import { addressMatch } from './helpers/addressMatch'
-
-const API_URL = 'https://scripture-api.orb.local'
+import { API_URL } from './api'
 
 export class EditorSuggestVerse extends EditorSuggest<SuggestVerse> {
   plugin: BibleKitPlugin

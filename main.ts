@@ -1,6 +1,7 @@
 import { Plugin } from 'obsidian'
 import { EditorSuggestVerse } from './src/EditorSuggestVerse'
 import { BibleKitSettingTab } from './src/settings/BibleKitSettingTab'
+import { SearchVerseModal } from './src/SearchVerseModal'
 
 type BibleKitSettings = {
   triggerPrefix: string
@@ -23,6 +24,15 @@ export default class BibleKitPlugin extends Plugin {
 
       // This adds a settings tab so the user can configure various aspects of the plugin
       this.addSettingTab(new BibleKitSettingTab(this.app, this))
+
+      // Add command to search verses via full-text search
+      this.addCommand({
+        id: 'search-verses',
+        name: 'Search verses',
+        editorCallback: (editor) => {
+          new SearchVerseModal(this.app, this, editor).open()
+        },
+      })
     } catch (err) {
       console.error('[ERROR]', err)
     }
