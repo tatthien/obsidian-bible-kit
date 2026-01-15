@@ -44,19 +44,18 @@ export class SearchVerseModal extends SuggestModal<FTSVerse> {
     })
     container.createEl('small', {
       cls: 'fts-suggestion-text',
-      text: htmlDescription(verse.text),
+      text: htmlDescription(verse.highlighted_text),
     })
   }
 
   onChooseSuggestion(verse: FTSVerse): void {
     const renderFormat = this.plugin.settings.renderFormat
     const verseContent = `<sup>${verse.verse}</sup> ${verse.text}`
-    const reference = `${verse.chapter}:${verse.verse}`
 
     let content = ''
     switch (renderFormat) {
       case 'callout':
-        content = `> [!bible]+ ${reference}\n> ${verseContent}`
+        content = `> [!bible]+ ${verse.reference}\n> ${verseContent}`
         break
       case 'blockquote':
         content = `> ${verseContent}`

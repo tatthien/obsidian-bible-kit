@@ -10,4 +10,5 @@ export type Verse = {
 export type FTSVerse = Verse & {
   rank: number
   reference: string
+  highlighted_text: string
 }
