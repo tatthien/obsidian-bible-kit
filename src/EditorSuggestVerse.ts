@@ -32,7 +32,12 @@ export class EditorSuggestVerse extends EditorSuggest<SuggestVerse> {
     }
 
     const prefixTrigger = currentContent.substring(0, 2)
-    if (!matchTirggerPrefix(new RegExp(this.plugin.settings.triggerPrefix), prefixTrigger)) {
+    if (
+      !matchTirggerPrefix(
+        new RegExp(this.plugin.settings.triggerPrefix),
+        prefixTrigger,
+      )
+    ) {
       return null
     }
 

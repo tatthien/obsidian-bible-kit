@@ -1,7 +1,8 @@
 import { Plugin } from 'obsidian'
 import { EditorSuggestVerse } from './src/EditorSuggestVerse'
+import { FullTextSearchModal } from './src/FullTextSearchModal'
+import { SearchVersesModal } from './src/SearchVersesModal'
 import { BibleKitSettingTab } from './src/settings/BibleKitSettingTab'
-import { SearchVerseModal } from './src/SearchVerseModal'
 
 type BibleKitSettings = {
   triggerPrefix: string
@@ -27,10 +28,19 @@ export default class BibleKitPlugin extends Plugin {
 
       // Add command to search verses via full-text search
       this.addCommand({
+        id: 'full-text-search',
+        name: 'Full-text search',
+        editorCallback: (editor) => {
+          new FullTextSearchModal(this.app, this, editor).open()
+        },
+      })
+
+      // Add command to search verses via address
+      this.addCommand({
         id: 'search-verses',
         name: 'Search verses',
         editorCallback: (editor) => {
-          new SearchVerseModal(this.app, this, editor).open()
+          new SearchVersesModal(this.app, this, editor).open()
         },
       })
     } catch (err) {
@@ -38,7 +48,7 @@ export default class BibleKitPlugin extends Plugin {
     }
   }
 
-  onunload() { }
+  onunload() {}
 
   async loadSettings() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData())

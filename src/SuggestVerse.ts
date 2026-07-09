@@ -1,4 +1,4 @@
-import { Verse } from "./types";
+import type { Verse } from './types'
 
 export class SuggestVerse {
   private address: string

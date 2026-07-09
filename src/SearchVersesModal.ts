@@ -3,9 +3,14 @@ import { SuggestModal } from 'obsidian'
 import type BibleKitPlugin from '../main'
 import { API_URL } from './api'
 import { htmlDescription } from './settings/helpers'
-import type { FTSVerse } from './types'
+import type { Verse } from './types'
 
-export class SearchVerseModal extends SuggestModal<FTSVerse> {
+type DataResponse = {
+  reference: string
+  verses: Verse[]
+}
+
+export class SearchVersesModal extends SuggestModal<Verse> {
   plugin: BibleKitPlugin
   editor: Editor
 
@@ -16,41 +21,45 @@ export class SearchVerseModal extends SuggestModal<FTSVerse> {
     this.setPlaceholder('Search verses...')
   }
 
-  async getSuggestions(query: string): Promise<FTSVerse[]> {
+  async getSuggestions(query: string): Promise<Verse[]> {
     if (!query.trim()) return []
 
     try {
-      const res = await fetch(`${API_URL}/verses/fts`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query }),
-      })
+      const res = await fetch(`${API_URL}/verses/${encodeURIComponent(query)}`)
 
       if (!res.ok) return []
 
-      const verses: FTSVerse[] = await res.json()
-      return verses
+      const data: DataResponse = await res.json()
+      if (!data.verses.length) return []
+
+      const firstVerse = data.verses[0]
+
+      const result: Verse = {
+        ...firstVerse,
+      }
+
+      result.text = data.verses
+        .map((v) => `<sup>${v.verse}</sup> ${v.text}`)
+        .join(` `)
+
+      return [result]
     } catch (err) {
       console.error('[SearchVerseModal] Failed to fetch verses:', err)
       return []
     }
   }
 
-  renderSuggestion(verse: FTSVerse, el: HTMLElement): void {
+  renderSuggestion(verse: Verse, el: HTMLElement): void {
     const container = el.createDiv({ cls: 'fts-suggestion' })
     container.createEl('div', {
       cls: 'fts-suggestion-reference',
-      text: `${verse.reference}`,
-    })
-    container.createEl('small', {
-      cls: 'fts-suggestion-text',
-      text: htmlDescription(verse.highlighted_text),
+      text: htmlDescription(verse.text),
     })
   }
 
-  onChooseSuggestion(verse: FTSVerse): void {
+  onChooseSuggestion(verse: Verse): void {
     const renderFormat = this.plugin.settings.renderFormat
-    const verseContent = `<sup>${verse.verse}</sup> ${verse.text}`
+    const verseContent = `${verse.text}`
 
     let content = ''
     switch (renderFormat) {

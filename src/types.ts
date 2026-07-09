@@ -4,6 +4,7 @@ export type Verse = {
   chapter: number
   verse: number
   text: string
+  reference: string
 }
 
 // Full-text search result (includes rank for relevance sorting)
