@@ -1,16 +1,16 @@
 import {
-  Editor,
-  EditorPosition,
+  type Editor,
+  type EditorPosition,
   EditorSuggest,
-  EditorSuggestContext,
-  EditorSuggestTriggerInfo,
-  TFile,
+  type EditorSuggestContext,
+  type EditorSuggestTriggerInfo,
+  type TFile,
 } from 'obsidian'
-import BibleKitPlugin from '../main'
-import { matchTirggerPrefix } from './helpers/matchTriggerPrefix'
-import { SuggestVerse } from './SuggestVerse'
-import { addressMatch } from './helpers/addressMatch'
+import type BibleKitPlugin from '../main'
 import { API_URL } from './api'
+import { addressMatch } from './helpers/addressMatch'
+import { matchTriggerPrefix } from './helpers/matchTriggerPrefix'
+import { SuggestVerse } from './SuggestVerse'
 
 export class EditorSuggestVerse extends EditorSuggest<SuggestVerse> {
   plugin: BibleKitPlugin
@@ -33,7 +33,7 @@ export class EditorSuggestVerse extends EditorSuggest<SuggestVerse> {
 
     const prefixTrigger = currentContent.substring(0, 2)
     if (
-      !matchTirggerPrefix(
+      !matchTriggerPrefix(
         new RegExp(this.plugin.settings.triggerPrefix),
         prefixTrigger,
       )

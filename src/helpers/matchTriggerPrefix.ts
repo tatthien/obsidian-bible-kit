@@ -1,2 +1,2 @@
-export const matchTirggerPrefix = (prefix: RegExp, trigger: string) =>
+export const matchTriggerPrefix = (prefix: RegExp, trigger: string) =>
   prefix.test(trigger)
