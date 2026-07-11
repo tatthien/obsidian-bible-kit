@@ -7,7 +7,6 @@ import {
   type TFile,
 } from 'obsidian'
 import type BibleKitPlugin from '../main'
-import { API_URL } from './api'
 import { addressMatch } from './helpers/addressMatch'
 import { matchTriggerPrefix } from './helpers/matchTriggerPrefix'
 import { SuggestVerse } from './SuggestVerse'
@@ -57,16 +56,19 @@ export class EditorSuggestVerse extends EditorSuggest<SuggestVerse> {
   }
 
   async getSuggestions(context: EditorSuggestContext): Promise<SuggestVerse[]> {
-    const res = await fetch(
-      `${API_URL}/verses/${encodeURIComponent(context.query)}`,
-    )
-    const json = await res.json()
+    try {
+      const { verses, reference } =
+        this.plugin.bibleDb.getVerses(context.query)
 
-    if (!json.verses.length) return []
+      if (!verses.length) return []
 
-    const suggestVerse = new SuggestVerse(json.verses, json.reference)
+      const suggestVerse = new SuggestVerse(verses, reference)
 
-    return [suggestVerse]
+      return [suggestVerse]
+    } catch (err) {
+      console.error('[EditorSuggestVerse] Failed to get verses:', err)
+      return []
+    }
   }
 
   renderSuggestion(value: SuggestVerse, el: HTMLElement): void {

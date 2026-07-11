@@ -1,15 +1,17 @@
-import esbuild from 'esbuild'
-import process from 'process'
 import builtins from 'builtin-modules'
-import path from 'path'
+import esbuild from 'esbuild'
 import fs from 'fs'
+import path from 'path'
+import process from 'process'
 
 const copyFiles = {
   name: 'copy-files',
   setup(build) {
     build.onEnd((result) => {
       if (result.errors.length) {
-        console.log('[copy-files-plugin][error] build failed, skipping file copy')
+        console.log(
+          '[copy-files-plugin][error] build failed, skipping file copy',
+        )
         return
       }
 
@@ -27,13 +29,17 @@ const copyFiles = {
         fs.copyFileSync('main.js', pluginDir + '/main.js')
         fs.copyFileSync('styles.css', pluginDir + '/styles.css')
         fs.copyFileSync('manifest.json', pluginDir + '/manifest.json')
+        fs.copyFileSync(
+          'node_modules/sql.js/dist/sql-wasm.wasm',
+          pluginDir + '/sql-wasm.wasm',
+        )
 
-        console.log(`[copy-files-plugin] copied main.js, styles.css, and manifiest.json to ${pluginDir}`)
+        console.log(`[copy-files-plugin] copied files to ${pluginDir}`)
       } catch (err) {
         console.log('[copy-files-plugin][error] copying file:', err)
       }
     })
-  }
+  },
 }
 
 const banner = `/*
@@ -73,7 +79,7 @@ const context = await esbuild.context({
   treeShaking: true,
   outfile: 'main.js',
   minify: prod,
-  plugins: []
+  plugins: [copyFiles],
 })
 
 if (prod) {

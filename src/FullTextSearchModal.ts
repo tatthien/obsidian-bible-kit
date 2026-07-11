@@ -1,7 +1,6 @@
 import type { App, Editor } from 'obsidian'
 import { SuggestModal } from 'obsidian'
 import type BibleKitPlugin from '../main'
-import { API_URL } from './api'
 import { htmlDescription } from './settings/helpers'
 import type { FTSVerse } from './types'
 
@@ -20,18 +19,10 @@ export class FullTextSearchModal extends SuggestModal<FTSVerse> {
     if (!query.trim()) return []
 
     try {
-      const res = await fetch(`${API_URL}/verses/fts`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query }),
-      })
-
-      if (!res.ok) return []
-
-      const verses: FTSVerse[] = await res.json()
+      const verses = this.plugin.bibleDb.searchVerses(query)
       return verses
     } catch (err) {
-      console.error('[SearchVerseModal] Failed to fetch verses:', err)
+      console.error('[FullTextSearchModal] Failed to search verses:', err)
       return []
     }
   }

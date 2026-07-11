@@ -1,14 +1,8 @@
 import type { App, Editor } from 'obsidian'
 import { SuggestModal } from 'obsidian'
 import type BibleKitPlugin from '../main'
-import { API_URL } from './api'
 import { htmlDescription } from './settings/helpers'
 import type { Verse } from './types'
-
-type DataResponse = {
-  reference: string
-  verses: Verse[]
-}
 
 export class SearchVersesModal extends SuggestModal<Verse> {
   plugin: BibleKitPlugin
@@ -25,26 +19,17 @@ export class SearchVersesModal extends SuggestModal<Verse> {
     if (!query.trim()) return []
 
     try {
-      const res = await fetch(`${API_URL}/verses/${encodeURIComponent(query)}`)
+      const { verses } = this.plugin.bibleDb.getVerses(query)
+      if (!verses.length) return []
 
-      if (!res.ok) return []
-
-      const data: DataResponse = await res.json()
-      if (!data.verses.length) return []
-
-      const firstVerse = data.verses[0]
-
-      const result: Verse = {
-        ...firstVerse,
-      }
-
-      result.text = data.verses
+      const result: Verse = { ...verses[0] }
+      result.text = verses
         .map((v) => `<sup>${v.verse}</sup> ${v.text}`)
-        .join(` `)
+        .join(' ')
 
       return [result]
     } catch (err) {
-      console.error('[SearchVerseModal] Failed to fetch verses:', err)
+      console.error('[SearchVerseModal] Failed to get verses:', err)
       return []
     }
   }

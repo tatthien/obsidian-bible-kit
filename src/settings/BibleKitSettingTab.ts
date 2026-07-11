@@ -1,5 +1,5 @@
-import BibleKitPlugin from '../../main'
-import { App, PluginSettingTab, Setting } from 'obsidian'
+import { type App, PluginSettingTab, Setting } from 'obsidian'
+import type BibleKitPlugin from '../../main'
 import { htmlDescription } from './helpers'
 
 export class BibleKitSettingTab extends PluginSettingTab {
@@ -14,6 +14,18 @@ export class BibleKitSettingTab extends PluginSettingTab {
     const { containerEl } = this
 
     containerEl.empty()
+
+    new Setting(containerEl)
+      .setName('Scripture database path')
+      .setDesc('Path to the SQLite scripture database file (*.db).')
+      .addText((text) => {
+        text
+          .setPlaceholder('/path/to/scripture.db')
+          .setValue(this.plugin.settings.bibleDbPath)
+          .onChange(async (value) => {
+            await this.plugin.updateBibleDbPath(value)
+          })
+      })
 
     new Setting(containerEl)
       .setName('Trigger prefix')
