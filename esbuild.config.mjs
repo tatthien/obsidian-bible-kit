@@ -29,11 +29,6 @@ const copyFiles = {
         fs.copyFileSync('main.js', pluginDir + '/main.js')
         fs.copyFileSync('styles.css', pluginDir + '/styles.css')
         fs.copyFileSync('manifest.json', pluginDir + '/manifest.json')
-        fs.copyFileSync(
-          'node_modules/sql.js/dist/sql-wasm.wasm',
-          pluginDir + '/sql-wasm.wasm',
-        )
-
         console.log(`[copy-files-plugin] copied files to ${pluginDir}`)
       } catch (err) {
         console.log('[copy-files-plugin][error] copying file:', err)
@@ -79,6 +74,9 @@ const context = await esbuild.context({
   treeShaking: true,
   outfile: 'main.js',
   minify: prod,
+  loader: {
+    '.wasm': 'binary',
+  },
   plugins: [copyFiles],
 })
 

@@ -1,5 +1,6 @@
 import * as fs from 'fs'
 import initSqlJs, { type Database as SqlJsDatabase } from 'sql.js'
+import wasmBinary from 'sql.js/dist/sql-wasm.wasm'
 import type { FTSVerse, Verse } from './types'
 
 type BookInfo = {
@@ -101,17 +102,14 @@ type ParsedAddress = {
 export class BibleDatabase {
   private db: SqlJsDatabase | null = null
   private dbPath: string
-  private pluginDir: string
 
-  constructor(dbPath: string, pluginDir: string) {
+  constructor(dbPath: string) {
     this.dbPath = dbPath
-    this.pluginDir = pluginDir
   }
 
   async initialize(): Promise<void> {
-    const wasmPath = `${this.pluginDir}/sql-wasm.wasm`
     const SQL = await initSqlJs({
-      wasmBinary: fs.readFileSync(wasmPath),
+      wasmBinary,
     })
 
     const dbBuffer = fs.readFileSync(this.dbPath)

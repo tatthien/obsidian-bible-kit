@@ -25,11 +25,7 @@ export default class BibleKitPlugin extends Plugin {
     try {
       await this.loadSettings()
 
-      const vaultPath =
-        (this.app.vault.adapter as any).getBasePath?.() ||
-        (this.app.vault.adapter as any).basePath
-      const pluginDir = `${vaultPath}/.obsidian/plugins/${this.manifest.id}`
-      this.bibleDb = new BibleDatabase(this.settings.bibleDbPath, pluginDir)
+      this.bibleDb = new BibleDatabase(this.settings.bibleDbPath)
       await this.initializeBibleDb()
 
       this.registerEditorSuggest(new EditorSuggestVerse(this))
@@ -80,11 +76,7 @@ export default class BibleKitPlugin extends Plugin {
     await this.saveSettings()
 
     this.bibleDb.close()
-    const vaultPath =
-      (this.app.vault.adapter as any).getBasePath?.() ||
-      (this.app.vault.adapter as any).basePath
-    const pluginDir = `${vaultPath}/.obsidian/plugins/${this.manifest.id}`
-    this.bibleDb = new BibleDatabase(path, pluginDir)
+    this.bibleDb = new BibleDatabase(path)
     await this.initializeBibleDb()
   }
 

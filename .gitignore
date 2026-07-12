@@ -3,4 +3,3 @@ dist/
 coverage/
 main.js
 data.json
-sql-wasm.wasm
