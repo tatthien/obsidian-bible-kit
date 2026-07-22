@@ -1,6 +1,6 @@
 import * as fs from 'fs'
-import * as path from 'path'
 import * as os from 'os'
+import * as path from 'path'
 import initSqlJs from 'sql.js'
 import { BibleDatabase } from './BibleDatabase'
 
@@ -29,7 +29,7 @@ beforeAll(async () => {
     )`,
   )
 
-  db.run('INSERT INTO books (id, name) VALUES (1, \'Genesis\')')
+  db.run("INSERT INTO books (id, name) VALUES (1, 'Genesis')")
   db.run(
     "INSERT INTO verses (id, book_id, chapter, verse, text) VALUES (1, 1, 1, 1, 'In the beginning God created the heavens and the earth.')",
   )

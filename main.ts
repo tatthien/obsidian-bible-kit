@@ -1,5 +1,6 @@
 import { Notice, Plugin } from 'obsidian'
 import { BibleDatabase } from './src/BibleDatabase'
+import { BibleBrowseView, VIEW_TYPE_BIBLE_BROWSE } from './src/BibleBrowseView'
 import { EditorSuggestVerse } from './src/EditorSuggestVerse'
 import { FullTextSearchModal } from './src/FullTextSearchModal'
 import { SearchVersesModal } from './src/SearchVersesModal'
@@ -47,6 +48,19 @@ export default class BibleKitPlugin extends Plugin {
           new SearchVersesModal(this.app, this, editor).open()
         },
       })
+
+      this.registerView(
+        VIEW_TYPE_BIBLE_BROWSE,
+        (leaf) => new BibleBrowseView(leaf, this),
+      )
+
+      this.addCommand({
+        id: 'browse-scripture',
+        name: 'Browse Scripture',
+        callback: () => {
+          this.activateBrowseView()
+        },
+      })
     } catch (err) {
       console.error('[ERROR]', err)
     }
@@ -69,6 +83,22 @@ export default class BibleKitPlugin extends Plugin {
         `Bible Kit: Failed to open scripture database at ${this.settings.bibleDbPath}`,
       )
     }
+  }
+
+  async activateBrowseView() {
+    const { workspace } = this.app
+    const existing = workspace.getLeavesOfType(VIEW_TYPE_BIBLE_BROWSE)[0]
+
+    if (existing) {
+      workspace.revealLeaf(existing)
+      return
+    }
+
+    const leaf = workspace.getRightLeaf(false)
+    if (!leaf) return
+
+    await leaf.setViewState({ type: VIEW_TYPE_BIBLE_BROWSE, active: true })
+    workspace.revealLeaf(leaf)
   }
 
   async updateBibleDbPath(path: string) {

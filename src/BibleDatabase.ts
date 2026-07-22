@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import initSqlJs, { type Database as SqlJsDatabase } from 'sql.js'
 import wasmBinary from 'sql.js/dist/sql-wasm.wasm'
-import type { FTSVerse, Verse } from './types'
+import type { Book, FTSVerse, Verse } from './types'
 
 type BookInfo = {
   bookId: number
@@ -288,6 +288,46 @@ export class BibleDatabase {
     } catch {
       return []
     }
+  }
+
+  getAllBooks(): Book[] {
+    return Object.entries(bibleBookMap)
+      .map(([abbr, info]) => ({
+        id: info.bookId,
+        abbreviation: abbr,
+        name: info.bookName.vi,
+        nameEn: info.bookName.en,
+      }))
+      .sort((a, b) => a.id - b.id)
+  }
+
+  getChapters(bookId: number): number[] {
+    const rows = this.queryAll(
+      'SELECT DISTINCT chapter FROM verses WHERE book_id = ? ORDER BY chapter',
+      [bookId],
+    )
+    return rows.map((row) => row.chapter as number)
+  }
+
+  getVersesByChapter(bookId: number, chapter: number): Verse[] {
+    const rows = this.queryAll(
+      'SELECT * FROM verses WHERE book_id = ? AND chapter = ? ORDER BY verse',
+      [bookId, chapter],
+    )
+    const book = Object.values(bibleBookMap).find((b) => b.bookId === bookId)
+    const bookName = book?.bookName.vi ?? ''
+    return rows.map((row) => ({
+      id: row.id as number,
+      book_id: row.book_id as number,
+      chapter: row.chapter as number,
+      verse: row.verse as number,
+      text: row.text as string,
+      reference: this.buildAddress(
+        bookName,
+        row.chapter as number,
+        row.verse as number,
+      ),
+    }))
   }
 
   close(): void {

@@ -57,8 +57,7 @@ export class EditorSuggestVerse extends EditorSuggest<SuggestVerse> {
 
   async getSuggestions(context: EditorSuggestContext): Promise<SuggestVerse[]> {
     try {
-      const { verses, reference } =
-        this.plugin.bibleDb.getVerses(context.query)
+      const { verses, reference } = this.plugin.bibleDb.getVerses(context.query)
 
       if (!verses.length) return []
 

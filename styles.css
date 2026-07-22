@@ -1,3 +1,37 @@
 .callout[data-callout="bible"] {
   --callout-icon: book-plus;
 }
+
+.bible-browse-view {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.bible-browse-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.bible-browse-toolbar select {
+  flex: 1;
+  min-width: 0;
+}
+
+.bible-browse-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.bible-browse-verse {
+  margin: 0;
+  padding: 0.25rem 0;
+  line-height: 1.6;
+}
+
+.bible-browse-verse sup {
+  color: var(--text-muted);
+  font-size: 0.75em;
+  margin-right: 0.25rem;
+}
