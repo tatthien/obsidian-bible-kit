@@ -16,7 +16,14 @@ This plugin aims to make Bible study easier and more productive for Vietnamese C
 
 ## Features
 
-- Embed scriptures into your Obsidian notes using Obsidian Editor's suggestion feature. For example, you can write `--gi 3:16` and the plugin will automatically suggest `Giăng 3:16`. For more information about the book abbreviations, see [this documentation](./docs/BOOK_ABBREVIATION.md).
+- **Inline scripture suggestions:** Type a trigger followed by a Bible reference, such as `--gi 3:16`, to insert the passage directly into the current note. Chapter references, individual verses, and verse ranges are supported.
+- **Reference search:** Use the **Bible Kit: Search verses** command to look up a passage by reference and insert it at the cursor.
+- **Full-text search:** Use the **Bible Kit: Full-text search** command to find verses by words or phrases and insert a selected result.
+- **Scripture browser:** Open **Bible Kit: Browse Scripture** to browse by book, chapter, and verse in a dedicated sidebar view.
+- **Multiple output formats:** Insert scripture as an Obsidian callout, blockquote, or normal inline HTML.
+- **Configurable trigger:** Choose `--` or `@@` as the inline suggestion prefix in the plugin settings.
+- **Local Bible database:** Select a local SQLite scripture database in the plugin settings; scripture content remains on your device.
+- **Vietnamese Bible references:** Includes Vietnamese book names and abbreviations for all 66 books. See the [book abbreviation guide](./docs/BOOK_ABBREVIATION.md).
 
 ## License
 
