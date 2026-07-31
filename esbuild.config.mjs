@@ -16,7 +16,12 @@ const copyFiles = {
       }
 
       try {
-        const destDir = path.resolve(process.env.OBSIDIAN_VAULT_DIR)
+        const vaultDir = process.env.OBSIDIAN_VAULT_DIR
+        if (!vaultDir) {
+          return
+        }
+
+        const destDir = path.resolve(vaultDir)
         if (!fs.existsSync(destDir)) {
           throw new Error('Obsidian vault does not exist')
         }
@@ -68,6 +73,7 @@ const context = await esbuild.context({
     ...builtins,
   ],
   format: 'cjs',
+  jsx: 'automatic',
   target: 'es2018',
   logLevel: 'info',
   sourcemap: prod ? false : 'inline',

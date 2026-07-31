@@ -7,6 +7,9 @@
 const config = {
   preset: "ts-jest",
   testEnvironment: "node",
+  moduleNameMapper: {
+    "\\.wasm$": "<rootDir>/test/wasmMock.js",
+  },
 
   // The glob patterns Jest uses to detect test files
   testMatch: ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[tj]s?(x)"],

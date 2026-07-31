@@ -1,3 +1,10 @@
+export type Book = {
+  id: number
+  abbreviation: string
+  name: string
+  nameEn: string
+}
+
 export type Verse = {
   id: number
   book_id: number

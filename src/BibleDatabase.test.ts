@@ -1,6 +1,6 @@
 import * as fs from 'fs'
-import * as path from 'path'
 import * as os from 'os'
+import * as path from 'path'
 import initSqlJs from 'sql.js'
 import { BibleDatabase } from './BibleDatabase'
 
@@ -29,7 +29,7 @@ beforeAll(async () => {
     )`,
   )
 
-  db.run('INSERT INTO books (id, name) VALUES (1, \'Genesis\')')
+  db.run("INSERT INTO books (id, name) VALUES (1, 'Genesis')")
   db.run(
     "INSERT INTO verses (id, book_id, chapter, verse, text) VALUES (1, 1, 1, 1, 'In the beginning God created the heavens and the earth.')",
   )
@@ -56,7 +56,7 @@ describe('BibleDatabase', () => {
   let bibleDb: BibleDatabase
 
   beforeAll(async () => {
-    bibleDb = new BibleDatabase(dbPath, pluginDir)
+    bibleDb = new BibleDatabase(dbPath)
     await bibleDb.initialize()
   })
 
@@ -104,6 +104,29 @@ describe('BibleDatabase', () => {
     it('should return empty array when FTS query fails (no FTS table)', () => {
       const results = bibleDb.searchVerses('God')
       expect(results).toEqual([])
+    })
+  })
+
+  describe('browse scripture', () => {
+    it('should list books in canonical order', () => {
+      const books = bibleDb.getAllBooks()
+
+      expect(books).toHaveLength(66)
+      expect(books[0]).toEqual({
+        id: 1,
+        abbreviation: 'sa',
+        name: 'Sáng-thế Ký',
+        nameEn: 'Genesis',
+      })
+      expect(books[65].id).toBe(66)
+    })
+
+    it('should list chapters and verses in order', () => {
+      expect(bibleDb.getChapters(1)).toEqual([1, 2])
+
+      const verses = bibleDb.getVersesByChapter(1, 1)
+      expect(verses.map((verse) => verse.verse)).toEqual([1, 2, 3])
+      expect(verses[0].reference).toBe('Sáng-thế Ký 1:1')
     })
   })
 })

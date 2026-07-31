@@ -57,8 +57,7 @@ export class EditorSuggestVerse extends EditorSuggest<SuggestVerse> {
 
   async getSuggestions(context: EditorSuggestContext): Promise<SuggestVerse[]> {
     try {
-      const { verses, reference } =
-        this.plugin.bibleDb.getVerses(context.query)
+      const { verses, reference } = this.plugin.bibleDb.getVerses(context.query)
 
       if (!verses.length) return []
 
@@ -76,7 +75,10 @@ export class EditorSuggestVerse extends EditorSuggest<SuggestVerse> {
     wrapper.innerHTML = value.renderSuggestion()
   }
 
-  selectSuggestion(value: SuggestVerse, evt: MouseEvent | KeyboardEvent): void {
+  selectSuggestion(
+    value: SuggestVerse,
+    _evt: MouseEvent | KeyboardEvent,
+  ): void {
     const renderFormat = this.plugin.settings.renderFormat
     let content = ''
 
