@@ -46,6 +46,31 @@ npx tsc --noEmit
 # Consider adding: npx eslint src/**/*.ts
 ```
 
+## Git Commit Convention
+
+All commit messages must follow the [Conventional Commits](https://www.conventionalcommits.org/) format:
+
+```text
+<type>(optional-scope): <description>
+```
+
+Use a concise, imperative, lowercase description. Common types include:
+
+- `feat`: Add or change user-facing functionality
+- `fix`: Correct a bug
+- `docs`: Change documentation only
+- `test`: Add or update tests
+- `refactor`: Restructure code without changing behavior
+- `chore`: Update tooling, dependencies, or maintenance tasks
+
+Examples:
+
+```text
+feat: add Scripture browsing view
+fix(database): preserve the active database when validation fails
+docs: document Bible Kit search features
+```
+
 ## Project Structure
 
 ```
