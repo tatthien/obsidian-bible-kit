@@ -60,7 +60,7 @@ export default class BibleKitPlugin extends Plugin {
 
       this.addCommand({
         id: 'browse-scripture',
-        name: 'Browse Scripture',
+        name: 'Browse scripture',
         callback: () => {
           this.activateBrowseView()
         },

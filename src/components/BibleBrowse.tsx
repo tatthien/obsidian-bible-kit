@@ -1,6 +1,9 @@
+import { Notice } from 'obsidian'
 import { useState } from 'react'
 import type BibleKitPlugin from '../../main'
+import { formatVerseSelectionReference } from '../helpers/formatVerseSelectionReference'
 import { resolveBrowseSelection } from '../helpers/resolveBrowseSelection'
+import { SuggestVerse } from '../SuggestVerse'
 import type { Book, Verse } from '../types'
 import { SearchableSelect } from './SearchableSelect'
 
@@ -35,12 +38,18 @@ export function BibleBrowse({ plugin }: BibleBrowseProps) {
         )
       : [],
   )
+  const [selectedVerseIds, setSelectedVerseIds] = useState<Set<number>>(
+    () => new Set(),
+  )
+  const [hasCopied, setHasCopied] = useState(false)
 
   const handleBookChange = (bookId: number | null) => {
     setSelectedBook(bookId)
     setChapters(bookId ? plugin.bibleDb.getChapters(bookId) : [])
     setSelectedChapter(null)
     setVerses([])
+    setSelectedVerseIds(new Set())
+    setHasCopied(false)
   }
 
   const handleChapterChange = (chapter: number | null) => {
@@ -50,9 +59,60 @@ export function BibleBrowse({ plugin }: BibleBrowseProps) {
         ? plugin.bibleDb.getVersesByChapter(selectedBook, chapter)
         : [],
     )
+    setSelectedVerseIds(new Set())
+    setHasCopied(false)
 
     if (selectedBook && chapter) {
       void plugin.saveBrowseSelection(selectedBook, chapter)
+    }
+  }
+
+  const toggleVerse = (verseId: number) => {
+    setHasCopied(false)
+    setSelectedVerseIds((current) => {
+      const next = new Set(current)
+      if (next.has(verseId)) {
+        next.delete(verseId)
+      } else {
+        next.add(verseId)
+      }
+      return next
+    })
+  }
+
+  const selectedVerses = verses.filter((verse) =>
+    selectedVerseIds.has(verse.id),
+  )
+  const selectedReference = formatVerseSelectionReference(selectedVerses)
+
+  const copySelectedVerses = async (): Promise<void> => {
+    if (!selectedVerses.length) return
+
+    const suggestion = new SuggestVerse(selectedVerses, selectedReference)
+    let content: string
+
+    switch (plugin.settings.renderFormat) {
+      case 'callout':
+        content = suggestion.callout()
+        break
+      case 'blockquote':
+        content = suggestion.blockquote()
+        break
+      default:
+        content = suggestion.normal()
+    }
+
+    try {
+      await navigator.clipboard.writeText(content)
+      setHasCopied(true)
+      new Notice(
+        `Bible Kit: Copied ${selectedVerses.length} verse${
+          selectedVerses.length === 1 ? '' : 's'
+        }`,
+      )
+    } catch (err) {
+      console.error('[BibleKit] Failed to copy verses:', err)
+      new Notice('Bible Kit: Failed to copy selected verses')
     }
   }
 
@@ -84,13 +144,58 @@ export function BibleBrowse({ plugin }: BibleBrowseProps) {
           onChange={handleChapterChange}
         />
       </div>
-      <div className="bible-browse-content">
+      <div
+        className={`bible-browse-content${
+          selectedVerseIds.size ? ' has-selection' : ''
+        }`}
+      >
         {verses.map((v) => (
-          <p key={v.id} className="bible-browse-verse">
-            <sup>{v.verse}</sup> {v.text}
-          </p>
+          <label
+            key={v.id}
+            className={`bible-browse-verse${
+              selectedVerseIds.has(v.id) ? ' is-selected' : ''
+            }`}
+          >
+            <input
+              className="bible-browse-verse-select"
+              type="checkbox"
+              checked={selectedVerseIds.has(v.id)}
+              aria-label={`Select ${v.reference}`}
+              style={{ width: '1px', height: '1px' }}
+              onChange={() => toggleVerse(v.id)}
+            />
+            <span>
+              <sup>{v.verse}</sup> {v.text}
+            </span>
+          </label>
         ))}
       </div>
+      {selectedVerses.length > 0 && (
+        <div className="bible-browse-copy-panel">
+          <div className="bible-browse-copy-reference">
+            <span>Currently selected</span>
+            <strong>{selectedReference}</strong>
+          </div>
+          <button
+            type="button"
+            className="mod-cta"
+            onClick={() => void copySelectedVerses()}
+          >
+            {hasCopied ? 'Copied' : 'Copy'}
+          </button>
+          <button
+            type="button"
+            className="clickable-icon"
+            aria-label="Clear verse selection"
+            onClick={() => {
+              setSelectedVerseIds(new Set())
+              setHasCopied(false)
+            }}
+          >
+            ×
+          </button>
+        </div>
+      )}
     </div>
   )
 }

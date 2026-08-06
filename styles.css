@@ -6,6 +6,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .bible-browse-toolbar {
@@ -68,14 +69,66 @@
   overflow-y: auto;
 }
 
+.bible-browse-content.has-selection {
+  padding-bottom: 5rem;
+}
+
 .bible-browse-verse {
+  cursor: pointer;
+  display: block;
+  line-height: 1.6;
   margin: 0;
   padding: 0.25rem 0;
-  line-height: 1.6;
+}
+
+.bible-browse-verse-select {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.bible-browse-verse.is-selected span {
+  text-decoration: underline;
+  text-decoration-color: var(--text-muted);
+  text-underline-offset: 0.15em;
 }
 
 .bible-browse-verse sup {
   color: var(--text-muted);
   font-size: 0.75em;
   margin-right: 0.25rem;
+}
+
+.bible-browse-copy-panel {
+  align-items: center;
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  bottom: var(--size-4-2);
+  box-shadow: var(--shadow-l);
+  display: flex;
+  gap: var(--size-4-2);
+  left: var(--size-4-2);
+  padding: var(--size-4-2);
+  position: absolute;
+  right: var(--size-4-2);
+  z-index: var(--layer-popover);
+}
+
+.bible-browse-copy-reference {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.bible-browse-copy-reference span {
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+}
+
+.bible-browse-copy-reference strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
