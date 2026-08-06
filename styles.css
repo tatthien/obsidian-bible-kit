@@ -14,9 +14,53 @@
   margin-bottom: 1rem;
 }
 
-.bible-browse-toolbar select {
+.bible-browse-toolbar select,
+.bible-searchable-select {
   flex: 1;
   min-width: 0;
+}
+
+.bible-searchable-select {
+  position: relative;
+}
+
+.bible-browse-toolbar .bible-chapter-select {
+  flex: 0 0 9rem;
+}
+
+.bible-searchable-select-trigger {
+  text-align: left;
+  width: 100%;
+}
+
+.bible-searchable-select-menu {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  left: 0;
+  max-height: min(24rem, 70vh);
+  max-width: min(20rem, calc(100vw - 2rem));
+  min-width: min(18rem, calc(100vw - 2rem));
+  padding: var(--size-4-2);
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  z-index: var(--layer-menu);
+}
+
+.bible-chapter-select .bible-searchable-select-menu {
+  max-width: 100%;
+  min-width: 100%;
+  width: 100%;
+}
+
+.bible-searchable-select-menu .search-input-container {
+  margin-bottom: var(--size-2-2);
+  width: 100%;
+}
+
+.bible-searchable-select-options {
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .bible-browse-content {

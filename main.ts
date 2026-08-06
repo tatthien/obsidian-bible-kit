@@ -1,6 +1,6 @@
 import { Notice, Plugin } from 'obsidian'
-import { BibleDatabase } from './src/BibleDatabase'
 import { BibleBrowseView, VIEW_TYPE_BIBLE_BROWSE } from './src/BibleBrowseView'
+import { BibleDatabase } from './src/BibleDatabase'
 import { EditorSuggestVerse } from './src/EditorSuggestVerse'
 import { FullTextSearchModal } from './src/FullTextSearchModal'
 import { SearchVersesModal } from './src/SearchVersesModal'
@@ -10,12 +10,16 @@ type BibleKitSettings = {
   triggerPrefix: string
   renderFormat: string
   bibleDbPath: string
+  lastBrowseBookId: number | null
+  lastBrowseChapter: number | null
 }
 
 const DEFAULT_SETTINGS: BibleKitSettings = {
   triggerPrefix: '--',
   renderFormat: 'callout',
   bibleDbPath: '',
+  lastBrowseBookId: null,
+  lastBrowseChapter: null,
 }
 
 export default class BibleKitPlugin extends Plugin {
@@ -27,10 +31,7 @@ export default class BibleKitPlugin extends Plugin {
       await this.loadSettings()
 
       this.bibleDb = new BibleDatabase(this.settings.bibleDbPath)
-      await this.initializeBibleDb(
-        this.bibleDb,
-        this.settings.bibleDbPath,
-      )
+      await this.initializeBibleDb(this.bibleDb, this.settings.bibleDbPath)
 
       this.registerEditorSuggest(new EditorSuggestVerse(this))
 
@@ -86,9 +87,7 @@ export default class BibleKitPlugin extends Plugin {
       return true
     } catch (err) {
       console.error('[BibleKit] Failed to initialize Bible database:', err)
-      new Notice(
-        `Bible Kit: Failed to open scripture database at ${path}`,
-      )
+      new Notice(`Bible Kit: Failed to open scripture database at ${path}`)
       return false
     }
   }
@@ -124,6 +123,12 @@ export default class BibleKitPlugin extends Plugin {
     await this.saveSettings()
     previousDatabase.close()
     this.refreshBrowseViews()
+  }
+
+  async saveBrowseSelection(bookId: number, chapter: number): Promise<void> {
+    this.settings.lastBrowseBookId = bookId
+    this.settings.lastBrowseChapter = chapter
+    await this.saveSettings()
   }
 
   private refreshBrowseViews(): void {
