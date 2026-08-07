@@ -1,6 +1,6 @@
-# Obsidian Study for Vietnamese
+# Bible Study Kit for Vietnamese
 
-This plugin aims to make Bible study easier and more productive for Vietnamese Christians (or anyone who is using Bible in Vietnamese). The motivation behind this plugin is that I couldn't find any plugins supporting Vietnamese Bible translations.
+This plugin aims to make Bible study easier and more productive for Vietnamese Christians (or anyone who is using the Bible in Vietnamese). The motivation behind this plugin is that I couldn't find any plugins supporting Vietnamese Bible translations.
 
 > Whoever has my commands and keeps them is the one who loves me. The one who loves me will be loved by my Father, and I too will love them and show myself to them. John 14:21
 
