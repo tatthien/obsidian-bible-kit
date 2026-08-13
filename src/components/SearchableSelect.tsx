@@ -21,6 +21,7 @@ type SearchableSelectProps = {
   searchPlaceholder: string
   emptyMessage: string
   disabled?: boolean
+  openRequestKey?: number | null
   onChange: (value: number | null) => void
 }
 
@@ -32,6 +33,7 @@ export function SearchableSelect({
   searchPlaceholder,
   emptyMessage,
   disabled = false,
+  openRequestKey,
   onChange,
 }: SearchableSelectProps) {
   const [isOpen, setIsOpen] = useState(false)
@@ -65,6 +67,16 @@ export function SearchableSelect({
 
     return () => document.removeEventListener('pointerdown', handlePointerDown)
   }, [isOpen])
+
+  useEffect(() => {
+    if (openRequestKey === null || openRequestKey === undefined || disabled) {
+      return
+    }
+
+    setQuery('')
+    setHighlightedIndex(0)
+    setIsOpen(true)
+  }, [openRequestKey, disabled])
 
   const openMenu = () => {
     if (disabled) return

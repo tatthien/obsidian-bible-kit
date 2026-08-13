@@ -42,6 +42,9 @@ export function BibleBrowse({ plugin }: BibleBrowseProps) {
     () => new Set(),
   )
   const [hasCopied, setHasCopied] = useState(false)
+  const [chapterOpenRequest, setChapterOpenRequest] = useState<number | null>(
+    null,
+  )
 
   const handleBookChange = (bookId: number | null) => {
     setSelectedBook(bookId)
@@ -50,6 +53,9 @@ export function BibleBrowse({ plugin }: BibleBrowseProps) {
     setVerses([])
     setSelectedVerseIds(new Set())
     setHasCopied(false)
+    if (bookId) {
+      setChapterOpenRequest((current) => (current ?? 0) + 1)
+    }
   }
 
   const handleChapterChange = (chapter: number | null) => {
@@ -138,6 +144,7 @@ export function BibleBrowse({ plugin }: BibleBrowseProps) {
           }))}
           value={selectedChapter}
           disabled={!chapters.length}
+          openRequestKey={chapterOpenRequest}
           placeholder="Chapter..."
           searchPlaceholder="Search chapters..."
           emptyMessage="No chapters found"
