@@ -3,8 +3,13 @@ import { BibleBrowseView, VIEW_TYPE_BIBLE_BROWSE } from './src/BibleBrowseView'
 import { BibleDatabase } from './src/BibleDatabase'
 import { EditorSuggestVerse } from './src/EditorSuggestVerse'
 import { FullTextSearchModal } from './src/FullTextSearchModal'
+import {
+  removeBrowseHistorySession,
+  updateBrowseHistory,
+} from './src/helpers/updateBrowseHistory'
 import { SearchVersesModal } from './src/SearchVersesModal'
 import { BibleKitSettingTab } from './src/settings/BibleKitSettingTab'
+import type { BrowseSession } from './src/types'
 
 type BibleKitSettings = {
   triggerPrefix: string
@@ -12,6 +17,7 @@ type BibleKitSettings = {
   bibleDbPath: string
   lastBrowseBookId: number | null
   lastBrowseChapter: number | null
+  browseHistory: BrowseSession[]
 }
 
 const DEFAULT_SETTINGS: BibleKitSettings = {
@@ -20,6 +26,7 @@ const DEFAULT_SETTINGS: BibleKitSettings = {
   bibleDbPath: '',
   lastBrowseBookId: null,
   lastBrowseChapter: null,
+  browseHistory: [],
 }
 
 export default class BibleKitPlugin extends Plugin {
@@ -125,10 +132,29 @@ export default class BibleKitPlugin extends Plugin {
     this.refreshBrowseViews()
   }
 
-  async saveBrowseSelection(bookId: number, chapter: number): Promise<void> {
+  recordBrowseSelection(bookId: number, chapter: number): BrowseSession[] {
+    const session = { bookId, chapter }
     this.settings.lastBrowseBookId = bookId
     this.settings.lastBrowseChapter = chapter
-    await this.saveSettings()
+    this.settings.browseHistory = updateBrowseHistory(
+      this.settings.browseHistory,
+      session,
+    )
+    void this.saveSettings().catch((err) => {
+      console.error('[BibleKit] Failed to save browsing history:', err)
+    })
+    return this.settings.browseHistory
+  }
+
+  removeBrowseSession(session: BrowseSession): BrowseSession[] {
+    this.settings.browseHistory = removeBrowseHistorySession(
+      this.settings.browseHistory,
+      session,
+    )
+    void this.saveSettings().catch((err) => {
+      console.error('[BibleKit] Failed to save browsing history:', err)
+    })
+    return this.settings.browseHistory
   }
 
   private refreshBrowseViews(): void {
@@ -149,7 +175,25 @@ export default class BibleKitPlugin extends Plugin {
   }
 
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData())
+    const storedSettings = (await this.loadData()) as Partial<BibleKitSettings>
+    const hasStoredBrowseHistory = Array.isArray(storedSettings?.browseHistory)
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, storedSettings)
+    if (!Array.isArray(this.settings.browseHistory)) {
+      this.settings.browseHistory = []
+    }
+    if (
+      !hasStoredBrowseHistory &&
+      this.settings.lastBrowseBookId !== null &&
+      this.settings.lastBrowseChapter !== null
+    ) {
+      this.settings.browseHistory = updateBrowseHistory(
+        this.settings.browseHistory,
+        {
+          bookId: this.settings.lastBrowseBookId,
+          chapter: this.settings.lastBrowseChapter,
+        },
+      )
+    }
   }
 
   async saveSettings() {

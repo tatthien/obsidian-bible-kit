@@ -29,6 +29,58 @@
   flex: 0 0 9rem;
 }
 
+.bible-browse-history {
+  flex: 0 0 var(--input-height);
+  position: relative;
+}
+
+.bible-browse-history-trigger {
+  height: var(--input-height);
+  width: var(--input-height);
+}
+
+.bible-browse-history-menu {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  max-height: min(24rem, 70vh);
+  min-width: min(18rem, calc(100vw - 2rem));
+  overflow: hidden;
+  padding: var(--size-4-2);
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.25rem);
+  z-index: var(--layer-menu);
+}
+
+.bible-browse-history-options {
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.bible-browse-history-options .suggestion-item {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.bible-browse-history-options .suggestion-item:not(.is-disabled):hover {
+  background: var(--background-modifier-hover);
+}
+
+.bible-browse-history-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bible-browse-history-remove {
+  flex: 0 0 auto;
+  margin-left: var(--size-4-2);
+}
+
 .bible-searchable-select-trigger {
   text-align: left;
   width: 100%;

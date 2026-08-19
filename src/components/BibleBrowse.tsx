@@ -4,7 +4,8 @@ import type BibleKitPlugin from '../../main'
 import { formatVerseSelectionReference } from '../helpers/formatVerseSelectionReference'
 import { resolveBrowseSelection } from '../helpers/resolveBrowseSelection'
 import { SuggestVerse } from '../SuggestVerse'
-import type { Book, Verse } from '../types'
+import type { Book, BrowseSession, Verse } from '../types'
+import { BrowseHistory } from './BrowseHistory'
 import { SearchableSelect } from './SearchableSelect'
 
 type BibleBrowseProps = {
@@ -45,6 +46,9 @@ export function BibleBrowse({ plugin }: BibleBrowseProps) {
   const [chapterOpenRequest, setChapterOpenRequest] = useState<number | null>(
     null,
   )
+  const [browseHistory, setBrowseHistory] = useState<BrowseSession[]>(() =>
+    plugin.settings.browseHistory.slice(0, 10),
+  )
 
   const handleBookChange = (bookId: number | null) => {
     setSelectedBook(bookId)
@@ -69,8 +73,29 @@ export function BibleBrowse({ plugin }: BibleBrowseProps) {
     setHasCopied(false)
 
     if (selectedBook && chapter) {
-      void plugin.saveBrowseSelection(selectedBook, chapter)
+      setBrowseHistory(plugin.recordBrowseSelection(selectedBook, chapter))
     }
+  }
+
+  const handleHistorySelect = (session: BrowseSession) => {
+    const nextChapters = plugin.bibleDb.getChapters(session.bookId)
+    if (!nextChapters.includes(session.chapter)) return
+
+    setSelectedBook(session.bookId)
+    setChapters(nextChapters)
+    setSelectedChapter(session.chapter)
+    setVerses(
+      plugin.bibleDb.getVersesByChapter(session.bookId, session.chapter),
+    )
+    setSelectedVerseIds(new Set())
+    setHasCopied(false)
+    setBrowseHistory(
+      plugin.recordBrowseSelection(session.bookId, session.chapter),
+    )
+  }
+
+  const handleHistoryRemove = (session: BrowseSession) => {
+    setBrowseHistory(plugin.removeBrowseSession(session))
   }
 
   const toggleVerse = (verseId: number) => {
@@ -149,6 +174,14 @@ export function BibleBrowse({ plugin }: BibleBrowseProps) {
           searchPlaceholder="Search chapters..."
           emptyMessage="No chapters found"
           onChange={handleChapterChange}
+        />
+        <BrowseHistory
+          books={books}
+          sessions={browseHistory}
+          selectedBookId={selectedBook}
+          selectedChapter={selectedChapter}
+          onSelect={handleHistorySelect}
+          onRemove={handleHistoryRemove}
         />
       </div>
       <div
