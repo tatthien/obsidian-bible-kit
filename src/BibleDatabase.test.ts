@@ -100,13 +100,6 @@ describe('BibleDatabase', () => {
     })
   })
 
-  describe('searchVerses', () => {
-    it('should return empty array when FTS query fails (no FTS table)', () => {
-      const results = bibleDb.searchVerses('God')
-      expect(results).toEqual([])
-    })
-  })
-
   describe('browse scripture', () => {
     it('should list books in canonical order', () => {
       const books = bibleDb.getAllBooks()

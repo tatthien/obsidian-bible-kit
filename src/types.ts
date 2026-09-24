@@ -18,10 +18,3 @@ export type Verse = {
   text: string
   reference: string
 }
-
-// Full-text search result (includes rank for relevance sorting)
-export type FTSVerse = Verse & {
-  rank: number
-  reference: string
-  highlighted_text: string
-}

@@ -18,7 +18,6 @@ This plugin aims to make Bible study easier and more productive for Vietnamese C
 
 - **Inline scripture suggestions:** Type a trigger followed by a Bible reference, such as `--gi 3:16`, to insert the passage directly into the current note. Chapter references, individual verses, and verse ranges are supported.
 - **Reference search:** Use the **Bible Kit: Search verses** command to look up a passage by reference and insert it at the cursor.
-- **Full-text search:** Use the **Bible Kit: Full-text search** command to find verses by words or phrases and insert a selected result.
 - **Scripture browser:** Open **Bible Kit: Browse Scripture** to browse by book, chapter, and verse in a dedicated sidebar view.
 - **Multiple output formats:** Insert scripture as an Obsidian callout, blockquote, or normal inline HTML.
 - **Configurable trigger:** Choose `--` or `@@` as the inline suggestion prefix in the plugin settings.

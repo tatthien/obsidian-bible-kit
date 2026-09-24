@@ -2,7 +2,6 @@ import { Notice, Plugin } from 'obsidian'
 import { BibleBrowseView, VIEW_TYPE_BIBLE_BROWSE } from './src/BibleBrowseView'
 import { BibleDatabase } from './src/BibleDatabase'
 import { EditorSuggestVerse } from './src/EditorSuggestVerse'
-import { FullTextSearchModal } from './src/FullTextSearchModal'
 import {
   removeBrowseHistorySession,
   updateBrowseHistory,
@@ -43,14 +42,6 @@ export default class BibleKitPlugin extends Plugin {
       this.registerEditorSuggest(new EditorSuggestVerse(this))
 
       this.addSettingTab(new BibleKitSettingTab(this.app, this))
-
-      this.addCommand({
-        id: 'full-text-search',
-        name: 'Full-text search',
-        editorCallback: (editor) => {
-          new FullTextSearchModal(this.app, this, editor).open()
-        },
-      })
 
       this.addCommand({
         id: 'search-verses',

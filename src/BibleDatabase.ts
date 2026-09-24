@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import initSqlJs, { type Database as SqlJsDatabase } from 'sql.js'
 import wasmBinary from 'sql.js/dist/sql-wasm.wasm'
-import type { Book, FTSVerse, Verse } from './types'
+import type { Book, Verse } from './types'
 
 type BookInfo = {
   bookId: number
@@ -249,53 +249,6 @@ export class BibleDatabase {
     )
 
     return { verses, reference }
-  }
-
-  searchVerses(query: string): FTSVerse[] {
-    if (!this.db) {
-      return []
-    }
-
-    const sanitized = query.replace(/[.,!@#$%^&*()-]/g, '')
-
-    try {
-      const rows = this.queryAll(
-        `SELECT v.id, v.book_id, v.chapter, v.verse, v.text,
-                highlight(verses_fts, 1, '<b>', '</b>') as highlighted_text,
-                rank
-         FROM verses AS v
-         INNER JOIN verses_fts AS s ON s.row_id = v.id
-         WHERE verses_fts MATCH ?
-         ORDER BY rank`,
-        [sanitized],
-      )
-
-      return rows.map((row) => {
-        const book = Object.values(bibleBookMap).find(
-          (b) => b.bookId === (row.book_id as number),
-        )
-        const reference = book
-          ? this.buildAddress(
-              book.bookName.vi,
-              row.chapter as number,
-              row.verse as number,
-            )
-          : `${row.chapter}:${row.verse}`
-
-        return {
-          id: row.id as number,
-          book_id: row.book_id as number,
-          chapter: row.chapter as number,
-          verse: row.verse as number,
-          text: row.text as string,
-          reference,
-          rank: row.rank as number,
-          highlighted_text: row.highlighted_text as string,
-        }
-      })
-    } catch {
-      return []
-    }
   }
 
   getAllBooks(): Book[] {
