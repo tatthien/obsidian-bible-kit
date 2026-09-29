@@ -93,6 +93,20 @@ describe('BibleDatabase', () => {
       expect(result.reference).toBe('1 Sa-mu-ên 2:1')
     })
 
+    it('should resolve English abbreviations like Gen', () => {
+      const result = bibleDb.getVerses('Gen 1:1')
+      expect(result.reference).toBe('Sáng-thế Ký 1:1')
+      expect(result.verses).toHaveLength(1)
+      expect(result.verses[0].text).toContain('beginning')
+    })
+
+    it('should keep Vietnamese abbreviations working alongside English', () => {
+      expect(bibleDb.isKnownReference('sa 1:1')).toBe(true)
+      expect(bibleDb.isKnownReference('Gen 1:1')).toBe(true)
+      expect(bibleDb.isKnownReference('john 3:16')).toBe(true)
+      expect(bibleDb.isKnownReference('not a verse')).toBe(false)
+    })
+
     it('should throw for invalid address', () => {
       expect(() => bibleDb.getVerses('not a verse')).toThrow(
         'Invalid bible address',

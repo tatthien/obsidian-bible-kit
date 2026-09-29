@@ -89,6 +89,154 @@ const bibleBookMap: Record<string, BookInfo> = {
   kh: { bookId: 66, bookName: { vi: 'Khải-huyền', en: 'Revelation' } },
 }
 
+const englishBookAliases: Record<string, number> = {
+  genesis: 1,
+  gen: 1,
+  exodus: 2,
+  exod: 2,
+  ex: 2,
+  leviticus: 3,
+  lev: 3,
+  numbers: 4,
+  num: 4,
+  deuteronomy: 5,
+  deut: 5,
+  de: 5,
+  joshua: 6,
+  josh: 6,
+  judges: 7,
+  judg: 7,
+  jdg: 7,
+  ruth: 8,
+  '1sam': 9,
+  '2sam': 10,
+  '1kings': 11,
+  '1kgs': 11,
+  '1ki': 11,
+  '2kings': 12,
+  '2kgs': 12,
+  '2ki': 12,
+  '1chr': 13,
+  '1ch': 13,
+  '2chr': 14,
+  '2ch': 14,
+  ezra: 15,
+  nehemiah: 16,
+  neh: 16,
+  esther: 17,
+  esth: 17,
+  est: 17,
+  job: 18,
+  psalms: 19,
+  psalm: 19,
+  ps: 19,
+  psa: 19,
+  proverbs: 20,
+  prov: 20,
+  pro: 20,
+  ecclesiastes: 21,
+  eccl: 21,
+  ecc: 21,
+  song: 22,
+  sos: 22,
+  isaiah: 23,
+  isa: 23,
+  jeremiah: 24,
+  jer: 24,
+  lamentations: 25,
+  lam: 25,
+  ezekiel: 26,
+  ezek: 26,
+  eze: 26,
+  daniel: 27,
+  dn: 27,
+  hosea: 28,
+  hos: 28,
+  joel: 29,
+  amos: 30,
+  obadiah: 31,
+  obad: 31,
+  oba: 31,
+  jonah: 32,
+  micah: 33,
+  mic: 33,
+  nahum: 34,
+  nah: 34,
+  habakkuk: 35,
+  hab: 35,
+  zephaniah: 36,
+  zeph: 36,
+  haggai: 37,
+  hag: 37,
+  zechariah: 38,
+  zech: 38,
+  malachi: 39,
+  mal: 39,
+  matthew: 40,
+  matt: 40,
+  mt: 40,
+  mark: 41,
+  mk: 41,
+  luke: 42,
+  lk: 42,
+  john: 43,
+  jn: 43,
+  acts: 44,
+  ac: 44,
+  romans: 45,
+  rom: 45,
+  rm: 45,
+  '1cor': 46,
+  '2cor': 47,
+  galatians: 48,
+  gal: 48,
+  ephesians: 49,
+  php: 50,
+  philippians: 50,
+  colossians: 51,
+  col: 51,
+  '1thess': 52,
+  '1th': 52,
+  '2thess': 53,
+  '2th': 53,
+  '1tim': 54,
+  '2tim': 55,
+  titus: 56,
+  philemon: 57,
+  philem: 57,
+  phm: 57,
+  hebrews: 58,
+  heb: 58,
+  james: 59,
+  jas: 59,
+  '1pet': 60,
+  '1pe': 60,
+  '2pet': 61,
+  '2pe': 61,
+  '1john': 62,
+  '1jn': 62,
+  '2john': 63,
+  '2jn': 63,
+  '3john': 64,
+  '3jn': 64,
+  jude: 65,
+  jud: 65,
+  revelation: 66,
+  rev: 66,
+}
+
+const bookInfoById = new Map<number, BookInfo>(
+  Object.values(bibleBookMap).map((info) => [info.bookId, info]),
+)
+
+const bookLookup: Record<string, BookInfo> = { ...bibleBookMap }
+for (const [alias, bookId] of Object.entries(englishBookAliases)) {
+  if (!bookLookup[alias]) {
+    const info = bookInfoById.get(bookId)
+    if (info) bookLookup[alias] = info
+  }
+}
+
 const ADDRESS_REGEX =
   /^(?<book>(?:[0-9]{1})?[A-Za-z]+)\s+(?<chapter>\d+)(?::(?<verseFrom>\d+)?(?:-(?<verseTo>\d+))?)?$/
 
@@ -179,11 +327,20 @@ export class BibleDatabase {
   }
 
   private getBook(abbr: string): BookInfo {
-    const book = bibleBookMap[abbr.toLowerCase()]
+    const book = bookLookup[abbr.toLowerCase()]
     if (!book) {
       throw new Error(`Invalid book abbreviation: ${abbr}`)
     }
     return book
+  }
+
+  isKnownReference(address: string): boolean {
+    try {
+      const { bookAbbr } = this.parseAddress(address)
+      return bookLookup[bookAbbr.toLowerCase()] !== undefined
+    } catch {
+      return false
+    }
   }
 
   private queryAll(

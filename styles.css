@@ -2,6 +2,70 @@
   --callout-icon: book-plus;
 }
 
+.bible-ref {
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--text-muted);
+  text-underline-offset: 0.2em;
+}
+
+.bible-hover-tooltip {
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-l);
+  box-sizing: border-box;
+  max-width: calc(100vw - 2rem);
+  padding: var(--size-4-3);
+  width: min(22rem, calc(100vw - 2rem));
+  z-index: var(--layer-popover);
+}
+
+.cm-tooltip:has(.bible-hover-tooltip) {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  max-width: none;
+  padding: 0;
+}
+
+.cm-tooltip .bible-hover-tooltip {
+  white-space: normal;
+}
+
+.bible-hover-tooltip-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-2);
+}
+
+.bible-hover-tooltip-reference {
+  color: var(--text-accent);
+  font-weight: var(--font-bold);
+}
+
+.bible-hover-tooltip-verses {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-2-2);
+  max-height: 20rem;
+  overflow-y: auto;
+}
+
+.bible-hover-tooltip-verse {
+  line-height: 1.6;
+  margin: 0;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.bible-hover-tooltip-verse sup {
+  color: var(--text-muted);
+  font-size: 0.75em;
+  margin-right: 0.25rem;
+}
+
 .bible-browse-view {
   height: 100%;
   display: flex;

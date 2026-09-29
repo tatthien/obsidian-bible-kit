@@ -1,6 +1,7 @@
 import { Notice, Plugin } from 'obsidian'
 import { BibleBrowseView, VIEW_TYPE_BIBLE_BROWSE } from './src/BibleBrowseView'
 import { BibleDatabase } from './src/BibleDatabase'
+import { registerBibleHover } from './src/BibleHover'
 import { EditorSuggestVerse } from './src/EditorSuggestVerse'
 import {
   removeBrowseHistorySession,
@@ -40,6 +41,7 @@ export default class BibleKitPlugin extends Plugin {
       await this.initializeBibleDb(this.bibleDb, this.settings.bibleDbPath)
 
       this.registerEditorSuggest(new EditorSuggestVerse(this))
+      registerBibleHover(this)
 
       this.addSettingTab(new BibleKitSettingTab(this.app, this))
 
